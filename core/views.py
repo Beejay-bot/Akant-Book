@@ -130,11 +130,11 @@ def addCustomerView(request):
         customer.save()
         messages.success(request, 'Customer successfully added.')
         return redirect('customers')
-    form = CustomerForm()
-    context = {
-        'form': form}
-    return render(request, 'addcustomer.html', context)
+    else:
+        messages.error(request, 'Form is Invalid, please re-fill it.')
+        return redirect('add-customer')
 
+    
 
 def customerDetails(request):
     context = {

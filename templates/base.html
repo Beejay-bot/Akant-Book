@@ -33,9 +33,26 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
+    {% block extra_head %}
+    {% endblock %}
 
 </head>
 <body>
+{% comment %} <div class="mt-5 pt-5 text-center">
+  {% if messages %}
+        {% for message in messages  %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          {{message}}
+           </div>
+        
+        {% endfor %}
+  {% endif %}
+</div> {% endcomment %}
+
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <a href="#" class="navbar-brand ml-5">
             <h4 style='font-family:sans-serif'> Akant Book</h4>
@@ -65,30 +82,35 @@
         </div>
     </nav>
 
-{% comment %} <div class="mt-5 pt-5 text-center">
-  {% if messages %}
-        {% for message in messages  %}
-        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            <span class="sr-only">Close</span>
-          </button>
-          {{message}}
-           </div>
-        
-        {% endfor %}
-  {% endif %}
-</div> {% endcomment %}
 
 
 {% block content %}
 {% endblock content %}
 
-</body>
-</html>
+    {% block extra_body %}
+    {% endblock %}
 
 </body>
 </html>
 
 </body>
 </html>
+
+</body>
+</html>
+
+
+{% comment %} 
+    {% if messages %}
+    <div>
+      <strong>Messages:</strong>
+      <ul>
+        {% for message in messages %}
+        <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% endcomment %}
+
+    
+

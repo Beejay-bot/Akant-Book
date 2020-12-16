@@ -51,7 +51,7 @@ class Business_Account(models.Model):
 
 
 class Expenses(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Type = models.CharField(choices=EXPENSE_CATEGORY, max_length=50)
     amount = models.FloatField()
     Date_added = models.DateTimeField(auto_now_add=True)
@@ -66,7 +66,7 @@ class Expenses(models.Model):
 
 
 class Income(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     income_type = models.CharField(choices=INCOME_CATEGORY, max_length=50)
     amount = models.FloatField()
     Date_added = models.DateTimeField(auto_now_add=True)
@@ -84,7 +84,7 @@ class Income(models.Model):
 
 
 class Customer(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     customer_name = models.CharField(max_length=100)
     customer_phone_number = models.IntegerField()
     email = models.EmailField(max_length=254)
@@ -103,7 +103,7 @@ class Customer(models.Model):
 
 
 class Transaction(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     amount = models.FloatField()
     transaction_date = models.DateTimeField(auto_now_add=True)
