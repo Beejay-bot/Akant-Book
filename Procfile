@@ -1,1 +1,1 @@
-web: gunicorn AkantBook.wsgi
+web: gunicorn AkantBook.wsgi --log-file -
