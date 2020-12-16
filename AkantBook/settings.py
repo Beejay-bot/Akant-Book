@@ -27,7 +27,7 @@ SECRET_KEY = '$jlb&vqc&gjx_#eyfs%@71qmw0&f)j9nd#jy0b#_kpt^or&pl_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['pacific-brook-44425.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['akantbook.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
