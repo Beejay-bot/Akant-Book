@@ -89,7 +89,7 @@ class Customer(models.Model):
     customer_phone_number = models.IntegerField()
     email = models.EmailField(max_length=254)
     Description = models.TextField(max_length=500)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True,)
 
     def __str__(self):
         return self.customer_name
