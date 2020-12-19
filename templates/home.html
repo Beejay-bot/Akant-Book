@@ -3,3 +3,20 @@
 {% block title %}
     Welcome
 {% endblock title %}
+
+{% block content %}
+<div class='container mt-5'>
+    <div class="jumbotron">
+        <h1 class="display-4">Hello, Welcome to Akant Book</h1>
+        <p class="lead">This is a simple ledger app, SMEs in Nigeria. Track your business sales, Customers, Transaction, Income and Expenses.</p>
+        <hr class="my-4">
+        <p>Please to Use Akant Book, Login. And if you don't have an account then please Sign up. 
+            <a href="{% url 'account_login' %}" class="btn btn-primary btn-sm"> Sign up
+            </a>
+        </p>
+        <p class="lead">
+            <a class="btn btn-warning btn-lg" href="{% url 'account_login' %}" role="button">Login >></a>
+        </p>
+    </div>
+</div>
+{% endblock %}

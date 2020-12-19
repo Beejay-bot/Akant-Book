@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import message
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import DetailView
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 
@@ -53,9 +54,10 @@ def expenseView(request):
     return render(request, 'expense.html', context)
 
 
+@login_required
 def addExpenseView(request):
     form = ExpensesForm(request.POST)
-    admin = Expenses.objects.filter(user=request.user)
+    # admin = Expenses.objects.filter(user=request.user)
     if form.is_valid():
         expense_type = form.cleaned_data.get('expense_type')
         amount = form.cleaned_data.get('amount')
@@ -76,6 +78,7 @@ def addExpenseView(request):
     return render(request, 'addexpense.html', context)
 
 
+@login_required
 def incomeView(request):
     income_form = Income.objects.all()
     context = {
@@ -84,9 +87,10 @@ def incomeView(request):
     return render(request, 'income.html', context)
 
 
+@login_required
 def addIncomeView(request):
     form = IncomeForm(request.POST)
-    admin = Income.objects.filter(user=request.user)
+    # admin = Income.objects.filter(user=request.user)
     if form.is_valid():
         income_type = form.cleaned_data.get('income_type')
         amount = form.cleaned_data.get('amount')
@@ -106,6 +110,7 @@ def addIncomeView(request):
     return render(request, 'addincome.html', context)
 
 
+@login_required
 def customerView(request):
     customers = Customer.objects.all()
     context = {
@@ -114,6 +119,7 @@ def customerView(request):
     return render(request, 'customer.html', context)
 
 
+@login_required
 def addCustomerView(request):
     form = CustomerForm(request.POST)
     if form.is_valid():
@@ -130,19 +136,22 @@ def addCustomerView(request):
         customer.save()
         messages.success(request, 'Customer successfully added.')
         return redirect('customers')
+    # else:
+    #     messages.error(request, 'Form is Invalid, please re-fill it.')
+    #     return redirect('add-customer')
     form = CustomerForm()
     context = {
-        'form': form}
+        'form': form
+    }
     return render(request, 'addcustomer.html', context)
 
 
-def customerDetails(request):
-    context = {
-        'customers': Customer.objects.all()
-    }
-    return render(request, 'customerdetails.html', context)
+class customerDetails(LoginRequiredMixin, DetailView):
+    model = Customer
+    template_name = 'customerDetail.html'
 
 
+@login_required
 def TransactionView(request, id):
     form = TransactionForm(request.POST)
     if form.is_valid():
@@ -172,7 +181,9 @@ def TransactionView(request, id):
 
     return render(request, 'transaction.html', context)
 
-
-def deleteIncome(request, my_id):
-    income = get_object_or_404(Income, pk=my_id)
-    income_qs = Income.objects.filter()
+# @login_required
+# def deleteCustomer(request, slug):
+#     query = Customer.objects.get(slug=slug)
+#     query.delete()
+#     messages.info(request, 'Customer deleted')
+#     return redirect('customers')

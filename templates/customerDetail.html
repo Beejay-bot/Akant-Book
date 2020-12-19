@@ -2,17 +2,13 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    Income-Dashboard
+    {{object.customer-name}} Details
 {% endblock title %}
 
 {% block content %}
-<div class="float-right">
-    <a class="btn  btn-warning badge-pill  ml-3 mt-3" href="{% url 'expenses' %}" role="button">
-    View Expenses</i>
-    </a>
-</div>
 
-<div class="row mt-5">
+
+<div class="row mt-3">
             <nav class="nav nav-pills flex-column ml-4  col-md-2" style="background-color:aliceblue">
                 <a href="{% url 'dashboard' %}" class="nav-item nav-link active mb-4 ml-3 mt-5">
                     <i class="fa fa-columns" ></i> Dashboard
@@ -34,15 +30,13 @@
                 </a>
             </nav>
 
-            <form method="POST" class='col-md-6 ml-5 mt-2' style="background-color:beige">
-                    <h3 class='text-center text-warning font-weight-bold font-famil-Roboto'> Expenses</h3>
-                        {% csrf_token %}
-                        <div class='flex justify-content-center'>
-                        {{ form|crispy}}
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-            </form>
+            <div style="background-color:antiquewhite" class="container col-md-9 ">
+                    <h4 style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif" class='mt-3 mb-4'>{{object_list.customer_name}}</h4> 
+                   
+            </div>
+
 
 </div>
     
 {% endblock %}
+

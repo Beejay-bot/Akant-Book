@@ -6,13 +6,13 @@
 {% endblock title %}
 
 {% block content %}
-<div class="">
+<div class="float-right">
     <a class="btn  btn-warning badge-pill ml-3 mt-3" href="{% url 'add-income' %}" role="button">
         <i class="fa fa-plus-circle" > Add Income</i>
     </a>
 </div>
 
-<div class="row mt-3">
+<div class="row mt-5">
             <nav class="nav nav-pills flex-column ml-4  col-md-2" style="background-color:aliceblue">
                 <a href="{% url 'dashboard' %}" class="nav-item nav-link active mb-4 ml-3 mt-5">
                     <i class="fa fa-columns" ></i> Dashboard
@@ -54,7 +54,7 @@
                                 <td>{{ form.Notes }}</td>
                                 <td>{{ form.Date_added }}</td>
                                 <td>
-                                    <a style="color:red;" href="">
+                                    <a style="color:red;" href="{% url 'delete-customer'  %}">
                                         <i class="fa fa-trash float-right"></i>
                                     </a>
                                 </td>
