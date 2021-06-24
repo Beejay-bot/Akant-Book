@@ -30,7 +30,7 @@ class AddBusinessAcctView(APIView):
             if serializer.is_valid():
                 print(serializer.validated_data)
                 if Business_Account.objects.filter(business_name=serializer.validated_data['business_name']).exists():
-                    return Response(data={'message':'This business name already exists'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+                    return Response(data={'message':'This business already exists'}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 elif Business_Account.objects.filter(business_email_address = serializer.validated_data['business_email_address']).exists():
                     return Response(data={'message':'Please trying another email, this email is used by a business'}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 else:
