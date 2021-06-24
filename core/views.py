@@ -64,7 +64,7 @@ def addExpenseView(request):
         note = form.cleaned_data.get('note')
 
         expense = Expenses()
-        expense.user = request.user
+        expense.business = request.user
         expense.Type = expense_type
         expense.amount = amount
         expense.Notes = note

@@ -1,9 +1,12 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+
+User = get_user_model()
 
 SERVICE_CATEGORIES = (
     ('Goods', 'Goods'),
@@ -34,7 +37,7 @@ INCOME_CATEGORY = (
 
 
 class Business_Account(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     business_name = models.CharField(max_length=50)
     Type_of_service = models.CharField(choices=SERVICE_CATEGORIES, max_length=50)
     business_email_address = models.EmailField(max_length=254)
@@ -44,14 +47,11 @@ class Business_Account(models.Model):
         verbose_name_plural = "Business_Accounts"
 
     def __str__(self):
-        return self.user.username
-
-    def get_absolute_url(self):
-        return reverse("Business_Account_detail", kwargs={"pk": self.pk})
+        return self.business_name
 
 
 class Expenses(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
     Type = models.CharField(choices=EXPENSE_CATEGORY, max_length=50)
     amount = models.FloatField()
     Date_added = models.DateTimeField(auto_now_add=True)
@@ -62,11 +62,11 @@ class Expenses(models.Model):
         verbose_name_plural = "Expenses"
 
     def __str__(self):
-        return self.user.username
+        return f'{self.Type} expense for {self.business}'
 
 
 class Income(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
     income_type = models.CharField(choices=INCOME_CATEGORY, max_length=50)
     amount = models.FloatField()
     Date_added = models.DateTimeField(auto_now_add=True)
@@ -77,14 +77,14 @@ class Income(models.Model):
         verbose_name_plural = "Income"
 
     def __str__(self):
-        return self.user.username
+        return f'{self.income_type} income for  {self.business}'
 
     def get_absolute_url(self):
         return reverse("Business_Account_detail", kwargs={"pk": self.pk})
 
 
 class Customer(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
     customer_name = models.CharField(max_length=100)
     customer_phone_number = models.IntegerField()
     email = models.EmailField(max_length=254)
@@ -94,16 +94,12 @@ class Customer(models.Model):
     def __str__(self):
         return self.customer_name
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.customer_name)
-        super().save(*args, **kwargs)
-
     def get_absolute_url(self):
         return reverse("customerDetails", kwargs={"slug": self.slug})
 
 
 class Transaction(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     amount = models.FloatField()
     transaction_date = models.DateTimeField(auto_now_add=True)
