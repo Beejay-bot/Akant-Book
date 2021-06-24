@@ -1,8 +1,13 @@
+from core.models import Income
 from django.urls import path
-from .views import AddBusinessAcctView, DeleteExpenseView, ExpensesView
+from .views import AddBusinessAcctView, CustomerView,EditCustomerView, DeleteExpenseView, DeleteIncomeView, ExpensesView, IncomeView
 
 urlpatterns = [
-    path('business_accounts/', AddBusinessAcctView.as_view(), name='Business_accounts'),
+    path('business_account/', AddBusinessAcctView.as_view(), name='Business_accounts'),
     path('expenses/', ExpensesView.as_view(), name='expensesApi'),
-    path('expense/<int:pk>/', DeleteExpenseView.as_view(), name='delete_expense')
+    path('delete_expense/<int:pk>/', DeleteExpenseView.as_view(), name='delete_expense'),
+    path('income/', IncomeView.as_view(), name='income_view'),
+    path('delete_income/<int:pk>/', DeleteIncomeView.as_view(), name='delete_income'),
+    path('customers/', CustomerView.as_view(), name='customer_view'),
+    path('edit_customer/<int:pk>/', EditCustomerView.as_view(), name='delete_income')
 ]

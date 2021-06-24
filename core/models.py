@@ -79,27 +79,20 @@ class Income(models.Model):
     def __str__(self):
         return f'{self.income_type} income for  {self.business}'
 
-    def get_absolute_url(self):
-        return reverse("Business_Account_detail", kwargs={"pk": self.pk})
-
 
 class Customer(models.Model):
-    user = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
     customer_name = models.CharField(max_length=100)
     customer_phone_number = models.IntegerField()
     email = models.EmailField(max_length=254)
     Description = models.TextField(max_length=500)
-    slug = models.SlugField(unique=True,)
 
     def __str__(self):
         return self.customer_name
 
-    def get_absolute_url(self):
-        return reverse("customerDetails", kwargs={"slug": self.slug})
-
 
 class Transaction(models.Model):
-    user = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business_Account, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     amount = models.FloatField()
     transaction_date = models.DateTimeField(auto_now_add=True)
