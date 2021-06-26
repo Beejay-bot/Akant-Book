@@ -1,26 +1,25 @@
 from django.db import models
-from django.db.models import manager, query
 from django.shortcuts import render
 from rest_framework import generics, serializers
 from rest_framework import response
 from rest_framework.views import APIView
-from core.models import Business_Account, Customer, Expenses, Income, User
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializer import BusinessAcctSerializer, CustomerSerializer, ExpenseSerializer, IncomeSerializer
+from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction
+from rest_framework.permissions import IsAuthenticated
+from .serializer import BusinessAcctSerializer, CustomerSerializer, ExpenseSerializer, IncomeSerializer, TransactionSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
 # Create your views here.
 
 class AddBusinessAcctView(APIView):
-    def get_object(self):
+    def get_object(self,request):
         try:
-            return Business_Account.objects.all()
+            return Business_Account.objects.filter(user=request.user)
         except:
             raise status.HTTP_404_NOT_FOUND
 
     def get(self,request):
-        queryset = self.get_object()
+        queryset = self.get_object(request)
         serializer = BusinessAcctSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -37,7 +36,7 @@ class AddBusinessAcctView(APIView):
                     serializer.save()
                     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         except:
-            return Response(data=serializer.error_messages, status=status.HTTP_404_NOT_FOUND)
+            return Response(data=serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ExpensesView(generics.ListCreateAPIView):
@@ -71,4 +70,24 @@ class EditCustomerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes= [IsAuthenticated]
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+class TransactionView(APIView):
+    def get(self,request):
+        query = Transaction.objects.all()
+        
+        print(request.user)
+        serializer = TransactionSerializer(query, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self,request):
+        serializer = TransactionSerializer(data=request.data)
+        if serializer.is_valid():
+                print(serializer.data['quanties_of_product_sold'])
+                Product.deduct_quanity(self,serializer.data['quanties_of_product_sold']) #deduct the quantities sold from the particular product in stock.
+                serializer.save()
+                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)
+    
+
 

@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import fields
 from rest_framework import serializers
-from core.models import Business_Account, Customer, Expenses, Income
+from core.models import Business_Account, Customer, Expenses, Income, Transaction
 
 
 class BusinessAcctSerializer(serializers.ModelSerializer):
@@ -23,4 +23,9 @@ class IncomeSerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
+        fields = '__all__'
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
         fields = '__all__'
