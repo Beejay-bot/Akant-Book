@@ -4,7 +4,7 @@ from .views import AddBusinessAcctView, CustomerView,EditCustomerView, DeleteExp
 
 urlpatterns = [
     path('business_account/', AddBusinessAcctView.as_view(), name='Business_accounts'),
-    path('expenses/', ExpensesView.as_view(), name='expensesApi'),
+    path('expenses/<int:business>/', ExpensesView.as_view(), name='expensesApi'),
     path('delete_expense/<int:pk>/', DeleteExpenseView.as_view(), name='delete_expense'),
     path('income/', IncomeView.as_view(), name='income_view'),
     path('delete_income/<int:pk>/', DeleteIncomeView.as_view(), name='delete_income'),

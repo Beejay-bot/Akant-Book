@@ -1,7 +1,5 @@
-from django.db import models
 from django.shortcuts import render
-from rest_framework import generics, serializers
-from rest_framework import response
+from rest_framework import generics
 from rest_framework.views import APIView
 from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction
 from rest_framework.permissions import IsAuthenticated
@@ -43,6 +41,11 @@ class ExpensesView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Expenses.objects.all()
     serializer_class = ExpenseSerializer
+
+    def get(self, request, business=None, *args, **kwargs):
+        query = Expenses.objects.filter(business=business)
+        Serializer = self.serializer_class(instance=query, many=True)
+        return Response(data=Serializer.data, status=status.HTTP_200_OK)
 
 class DeleteExpenseView(generics.DestroyAPIView):
     permission_classes= [IsAuthenticated]
