@@ -34,7 +34,9 @@ INCOME_CATEGORY = (
     ('Rentals', 'Rentals'),
     ('Sales', 'Sales'),
     ('Dividend', 'Dividend'),
+    ('Loan', 'Loan'),
     ('Investments', 'Investments'),
+
     ('Donations', 'Donations'),
 )
 

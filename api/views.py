@@ -1,11 +1,13 @@
-from django.shortcuts import render
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.views import APIView
 from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction
 from rest_framework.permissions import IsAuthenticated
 from .serializer import BusinessAcctSerializer, CustomerSerializer, ExpenseSerializer, IncomeSerializer, TransactionSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from .Permissions import AuthorityToMakeRequestForAParticularBusiness
+import json
 
 # Create your views here.
 
@@ -38,7 +40,7 @@ class AddBusinessAcctView(APIView):
 
 
 class ExpensesView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, AuthorityToMakeRequestForAParticularBusiness]
     queryset = Expenses.objects.all()
     serializer_class = ExpenseSerializer
 
@@ -54,9 +56,18 @@ class DeleteExpenseView(generics.DestroyAPIView):
 
 
 class IncomeView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, AuthorityToMakeRequestForAParticularBusiness]
     queryset = Income.objects.all()
     serializer_class = IncomeSerializer
+
+    def get(self, request,business=None):
+        # if request.user.id == business:
+        query = Income.objects.filter(business=business)
+        serializer =self.serializer_class(query, many=True)
+        dumpedData = json.dumps(serializer.data)
+        for I in dumpedData:
+            print(I[0])
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class DeleteIncomeView(generics.DestroyAPIView):
     permission_classes= [IsAuthenticated]
