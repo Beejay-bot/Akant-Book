@@ -39,13 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
     'core',
     'crispy_forms',
     'rest_framework',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -148,6 +145,7 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/dashboard'
 
+AUTH_USER_MODEL= 'users.UserModel'
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
