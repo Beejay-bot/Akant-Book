@@ -1,11 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db.models.deletion import SET_NULL
 
-# Create your models here.
-from django.template.defaultfilters import slugify
-from django.urls import reverse
 
 User = get_user_model()
 

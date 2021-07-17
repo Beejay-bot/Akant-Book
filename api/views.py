@@ -1,5 +1,4 @@
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework.views import APIView
 from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction
 from rest_framework.permissions import IsAuthenticated
@@ -38,6 +37,10 @@ class AddBusinessAcctView(APIView):
         except:
             return Response(data=serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
 
+class DeleteBusinessAcctView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Business_Account.objects.all()
+    serializer_class = BusinessAcctSerializer
 
 class ExpensesView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated, AuthorityToMakeRequestForAParticularBusiness]
