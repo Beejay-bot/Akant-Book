@@ -100,7 +100,7 @@ class TransactionView(APIView):
         serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid():
                 print(serializer.data['quanties_of_product_sold'])
-                Product.deduct_quanity(self,serializer.data['quanties_of_product_sold']) #deduct the quantities sold from the particular product in stock.
+                # Product.deduct_quanity(self,serializer.data['quanties_of_product_sold']) #deduct the quantities sold from the particular product in stock.
                 serializer.save()
                 return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
