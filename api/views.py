@@ -10,6 +10,7 @@ import json
 
 # Create your views here.
 
+
 class AddBusinessAcctView(APIView):
     def get_object(self,request):
         try:
@@ -64,12 +65,8 @@ class IncomeView(generics.ListCreateAPIView):
     serializer_class = IncomeSerializer
 
     def get(self, request,business=None):
-        # if request.user.id == business:
         query = Income.objects.filter(business=business)
         serializer =self.serializer_class(query, many=True)
-        dumpedData = json.dumps(serializer.data)
-        for I in dumpedData:
-            print(I[0])
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class DeleteIncomeView(generics.DestroyAPIView):
@@ -82,6 +79,11 @@ class CustomerView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+    def get(self, request,business=None):
+        query = Income.objects.filter(business=business)
+        serializer =self.serializer_class(query, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class EditCustomerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes= [IsAuthenticated]

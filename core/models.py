@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth import get_user_model
 import uuid
 
@@ -33,7 +32,6 @@ INCOME_CATEGORY = (
     ('Dividend', 'Dividend'),
     ('Loan', 'Loan'),
     ('Investments', 'Investments'),
-
     ('Donations', 'Donations'),
 )
 
@@ -133,7 +131,7 @@ class Transaction(models.Model):
     quanties_of_product_sold = models.IntegerField()
     transaction_date = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(choices=PAYMENT_METHOD, max_length=50)
-    reference_num = models.CharField(max_length=50, editable=True, default=generate_ref_no)
+    reference_num = models.CharField(max_length=50, editable=False, default=generate_ref_no)
 
     def __str__(self):
         return f'{self.customer} bought {self.quanties_of_product_sold}  {self.productSold} from {self.business} On {self.transaction_date}'
