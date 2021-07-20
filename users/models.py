@@ -5,7 +5,9 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 # Create your models here.
 
 class CustomAccountManager(BaseUserManager):
-    def create_user(self,email,username,password, full_name, **other_fields):
+    def create_user(self,username,email,password, full_name, **other_fields):
+        print('email:',email)
+        print('username:', username)
         if not email:
             raise ValueError('You must provided the neccessary values required to proceed: email, username,full_name and password')
         other_fields.setdefault('is_active', True)
@@ -24,7 +26,7 @@ class CustomAccountManager(BaseUserManager):
             raise ValueError(
                 'Super must be assigned to is_staff=True and is_superuser=True'
             )
-        return self.create_user(email, username, password,full_name, **other_fields)
+        return self.create_user(username,email, password,full_name, **other_fields)
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
     email= models.EmailField(_('email address'), unique=True)
@@ -36,8 +38,8 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomAccountManager()
 
-    REQUIRED_FIELDS = ['username', 'full_name']
-    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['email', 'full_name']
+    USERNAME_FIELD = 'username'
 
     def __str__(self) -> str:
         return self.username
