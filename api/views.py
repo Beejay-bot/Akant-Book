@@ -102,10 +102,9 @@ class TransactionView(generics.GenericAPIView):
         if serializer.is_valid():
                 serializer.save()
                 getTransaction = Transaction.objects.get(reference_num=serializer.data['reference_num'])
-                getTransaction_serializer = TransactionSerializer(getTransaction, many=True)
-                getTransaction.get_quantities_sold(serializer.data['customer'])
-                # get_product_added.deduct_quanity(self,serializer.data['quanties_of_product_sold']) #deduct the quantities sold from the particular product in stock.
-                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+                getProduct = Product.objects.get(product_name=serializer.validated_data['productSold'])
+                deduct_quantity_from_product_sold = getTransaction.deduct_quanity(serializer.data['quanties_of_product_sold'], getProduct) # deduct quantiy of the product sold from current product stock available.
+                return Response({'data':serializer.data, 'deducted_data':deduct_quantity_from_product_sold,'status':status.HTTP_201_CREATED})
         else:
             return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)
     

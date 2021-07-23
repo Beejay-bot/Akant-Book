@@ -18,10 +18,14 @@ class ExpenseConfig(admin.ModelAdmin):
     search_fields = ['business', 'Type', 'payment_method']
     list_filter = ['business','Date_added', 'Type', 'payment_method']
 
+class TransactionConfig(admin.ModelAdmin):
+    list_display = ['business','customer', 'productSold','quanties_of_product_sold', 'amount', 'payment_method', 'transaction_date','reference_num']
+    search_fields = ['business', 'customer', 'productSold','transaction_date','reference_num']
+    list_filter = ['business','customer', 'productSold', 'payment_method', 'transaction_date']
 
 admin.site.register(Business_Account, Business_AcctConfig)
 admin.site.register(Expenses, ExpenseConfig)
 admin.site.register(Income, ImportConfig)
 admin.site.register(Customer)
-admin.site.register(Transaction)
+admin.site.register(Transaction, TransactionConfig)
 admin.site.register(Product)

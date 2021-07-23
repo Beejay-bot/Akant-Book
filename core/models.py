@@ -2,7 +2,7 @@ import re
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
-
+from rest_framework import status
 
 User = get_user_model()
 
@@ -107,19 +107,8 @@ class Product(models.Model):
     current_product_stock_available =  models.IntegerField()
 
     def __str__(self):
-        return f'{self.product_name} ({self.business})'
+        return self.product_name
 
-    def can_reduce_product_quanity(self, quantityToBeRemoved):
-        amount = int(quantityToBeRemoved)
-        return self.current_product_stock_available >= amount
-    
-    def deduct_quanity(self,quantity):
-        if self.can_reduce_product_quanity(quantity):
-            amount = int(quantity)
-            self.current_product_stock_available -= amount
-            self.save()
-            return True
-        return False
 
 
 generate_ref_no = str(uuid.uuid1())
@@ -139,4 +128,17 @@ class Transaction(models.Model):
 
     def get_quantities_sold(self,quantities_sold):
         return print(quantities_sold)
-        
+    
+    
+    def can_reduce_product_quanity(self, quantityToBeRemoved,ProductObj):
+        amount = int(quantityToBeRemoved)
+        return ProductObj.current_product_stock_available >= amount
+    
+    def deduct_quanity(self,quantity, ProductObj):
+        if self.can_reduce_product_quanity(quantity, ProductObj):
+            amount = int(quantity)
+            ProductObj.current_product_stock_available -= amount
+            ProductObj.save()
+            self.save()
+            return {'Message':f"{quantity} {ProductObj.product_name} has been deducted from {ProductObj.product_name}'s available stock", 'Remainder':f"You have {ProductObj.current_product_stock_available} remaining {ProductObj.product_name} left","Status":status.HTTP_200_OK}
+        return {'Message':f"sorry we couldn't deduct the quantity of product sold has {ProductObj.product_name} remains {ProductObj.current_product_stock_available}. Please update the remaining stock available for this product.", 'Status':status.HTTP_404_NOT_FOUND}
