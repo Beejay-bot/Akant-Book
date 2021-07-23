@@ -11,5 +11,5 @@ urlpatterns = [
     path('delete_income/<int:pk>/', DeleteIncomeView.as_view(), name='delete_income'),
     path('customers/<int:business>/', CustomerView.as_view(), name='customer_view'),
     path('edit_customer/<int:pk>/', EditCustomerView.as_view(), name='delete_income'),
-    path('transaction/', TransactionView.as_view(), name='transaction')
+    path('transaction/<int:business>/', TransactionView.as_view(), name='transaction')
 ]

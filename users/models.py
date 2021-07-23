@@ -6,8 +6,6 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 
 class CustomAccountManager(BaseUserManager):
     def create_user(self,username,email,password, full_name, **other_fields):
-        print('email:',email)
-        print('username:', username)
         if not email:
             raise ValueError('You must provided the neccessary values required to proceed: email, username,full_name and password')
         other_fields.setdefault('is_active', True)

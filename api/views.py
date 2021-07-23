@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
+from django.utils import translation
 from rest_framework import generics
 from rest_framework.views import APIView
-from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction
+from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction, User
 from rest_framework.permissions import IsAuthenticated
 from .serializer import BusinessAcctSerializer, CustomerSerializer, ExpenseSerializer, IncomeSerializer, TransactionSerializer
 from rest_framework.response import Response
@@ -27,7 +29,6 @@ class AddBusinessAcctView(APIView):
         serializer = BusinessAcctSerializer(data=request.data)
         try:
             if serializer.is_valid():
-                print(serializer.validated_data)
                 if Business_Account.objects.filter(business_name=serializer.validated_data['business_name']).exists():
                     return Response(data={'message':'This business already exists'}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 elif Business_Account.objects.filter(business_email_address = serializer.validated_data['business_email_address']).exists():
@@ -90,20 +91,20 @@ class EditCustomerView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-class TransactionView(APIView):
-    def get(self,request):
-        query = Transaction.objects.all()
-        
-        print(request.user)
+class TransactionView(generics.GenericAPIView):
+    def get(self,request, business=None):
+        query = Transaction.objects.filter(business=business)
         serializer = TransactionSerializer(query, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)    
 
-    def post(self,request):
+    def post(self,request, business=None):
         serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid():
-                print(serializer.data['quanties_of_product_sold'])
-                # Product.deduct_quanity(self,serializer.data['quanties_of_product_sold']) #deduct the quantities sold from the particular product in stock.
                 serializer.save()
+                getTransaction = Transaction.objects.get(reference_num=serializer.data['reference_num'])
+                getTransaction_serializer = TransactionSerializer(getTransaction, many=True)
+                getTransaction.get_quantities_sold(serializer.data['customer'])
+                # get_product_added.deduct_quanity(self,serializer.data['quanties_of_product_sold']) #deduct the quantities sold from the particular product in stock.
                 return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)

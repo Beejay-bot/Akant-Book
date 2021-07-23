@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
@@ -44,9 +45,9 @@ PAYMENT_METHOD = (
 
 class Business_Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    business_name = models.CharField(max_length=50)
+    business_name = models.CharField(max_length=50, blank=False)
     Type_of_service = models.CharField(choices=SERVICE_CATEGORIES, max_length=50)
-    business_email_address = models.EmailField(max_length=254)
+    business_email_address = models.EmailField(max_length=254, blank=True)
 
     class Meta:
         verbose_name = "Business_Account"
@@ -61,7 +62,7 @@ class Expenses(models.Model):
     Type = models.CharField(choices=EXPENSE_CATEGORY, max_length=50)
     amount = models.FloatField()
     Date_added = models.DateTimeField(auto_now_add=True)
-    Notes = models.TextField(max_length=500)
+    Notes = models.TextField(max_length=500, blank=True)
     payment_method = models.CharField(choices=PAYMENT_METHOD, max_length=50)
 
     class Meta:
@@ -77,7 +78,7 @@ class Income(models.Model):
     income_type = models.CharField(choices=INCOME_CATEGORY, max_length=50)
     amount = models.FloatField()
     Date_added = models.DateTimeField(auto_now_add=True)
-    Notes = models.TextField(max_length=500)
+    Notes = models.TextField(max_length=500, blank=True)
 
     class Meta:
         verbose_name = "Income"
@@ -113,7 +114,7 @@ class Product(models.Model):
         return self.current_product_stock_available >= amount
     
     def deduct_quanity(self,quantity):
-        if self.current_product_stock_available >= int(quantity):
+        if self.can_reduce_product_quanity(quantity):
             amount = int(quantity)
             self.current_product_stock_available -= amount
             self.save()
@@ -131,7 +132,11 @@ class Transaction(models.Model):
     quanties_of_product_sold = models.IntegerField()
     transaction_date = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(choices=PAYMENT_METHOD, max_length=50)
-    reference_num = models.CharField(max_length=50, editable=False, default=generate_ref_no)
+    reference_num = models.CharField(max_length=50, editable=False, default=generate_ref_no, unique=True)
 
     def __str__(self):
-        return f'{self.customer} bought {self.quanties_of_product_sold}  {self.productSold} from {self.business} On {self.transaction_date}'
+        return f'{self.customer} '
+
+    def get_quantities_sold(self,quantities_sold):
+        return print(quantities_sold)
+        
