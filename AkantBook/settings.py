@@ -15,6 +15,11 @@ import os
 from decouple import config
 from datetime import timedelta
 from rest_framework.settings import api_settings
+import environ 
+
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'knox',
+    'post_office',
 ]
 
 MIDDLEWARE = [
@@ -163,3 +169,12 @@ REST_KNOX = {
   'EXPIRY_DATETIME_FORMAT': None,
 #   'AUTH_HEADER_PREFIX':'Bearer token'
 }
+
+DEFAULT_FROM_EMAIL = 'akisanyamobolaji@gmail.com'
+
+EMAIL_BACKEND = 'post_office.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'akisanyamobolaji@gmail.com'
+EMAIL_HOST_PASSWORD = 'lkdtqlsylynptjet'
+EMAIL_USE_TLS = True
