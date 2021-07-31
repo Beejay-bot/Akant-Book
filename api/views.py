@@ -124,7 +124,7 @@ class TransactionView(generics.GenericAPIView):
                 pdf = render_to_pdf('invoice.html', context)
                 if pdf:
                     response = HttpResponse(pdf, content_type='application/pdf')
-                    fileName = "Transaction_invoice%s.pdf_for_" %(serializer.validated_data['customer'])
+                    fileName = "Transaction_invoice%s.pdf_from" %(serializer.validated_data['business'])
                     content = "inline; fileName='%s'" %(fileName)
                     response['Content-Disposition'] = content
                     mail.send(
@@ -134,13 +134,11 @@ class TransactionView(generics.GenericAPIView):
                         html_message=f"Dear {serializer.validated_data['customer']}, <p>You just purchased some goods from {serializer.validated_data['business']}, the file attached below is your Invoice</p>",
                         priority='now',
                         # headers={'Reply-to': serializer.validated_data['business']},
-                        # attachments={
-                        #     f"{fileName}.pdf" : ContentFile('File content')
-                        # }
+                        attachments={
+                            f"{fileName}.pdf" : ContentFile(pdf)
+                        }
                     )
-                    return response  
-
-                # return Response({'data':serializer.data, 'deducted_data':deduct_quantity_from_product_sold, 'invoice':pdf,'status':status.HTTP_201_CREATED})
+                return Response({'data':serializer.data, 'deducted_data':deduct_quantity_from_product_sold,'status':status.HTTP_201_CREATED})
         else:
             return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)
     
