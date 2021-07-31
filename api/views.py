@@ -1,6 +1,8 @@
-from django.contrib.auth import get_user_model
+import re
+from django.http.response import HttpResponse
 from django.utils import translation
 from rest_framework import generics
+from rest_framework import response
 from rest_framework.views import APIView
 from core.models import Business_Account, Customer, Expenses, Income, Product, Transaction, User
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +10,10 @@ from .serializer import BusinessAcctSerializer, CustomerSerializer, ExpenseSeria
 from rest_framework.response import Response
 from rest_framework import status
 from .Permissions import AuthorityToMakeRequestForAParticularBusiness
-import json
+from .utils import render_to_pdf
+from django.template.loader import get_template
+from django.core.files.base import ContentFile
+from post_office import mail
 
 # Create your views here.
 
@@ -104,7 +109,38 @@ class TransactionView(generics.GenericAPIView):
                 getTransaction = Transaction.objects.get(reference_num=serializer.data['reference_num'])
                 getProduct = Product.objects.get(product_name=serializer.validated_data['productSold'])
                 deduct_quantity_from_product_sold = getTransaction.deduct_quanity(serializer.data['quanties_of_product_sold'], getProduct) # deduct quantiy of the product sold from current product stock available.
-                return Response({'data':serializer.data, 'deducted_data':deduct_quantity_from_product_sold,'status':status.HTTP_201_CREATED})
+                context = {
+                    'id' : serializer.data['id'],
+                    'business':serializer.validated_data['business'],
+                    'customer' : serializer.validated_data['customer'],
+                    'productSold': serializer.validated_data['productSold'],
+                    'amount': serializer.data['amount'],
+                    'quanties_of_product_sold':serializer.data['quanties_of_product_sold'],
+                    'payment_method': serializer.validated_data['payment_method'],
+                    'transaction_date':serializer.data['transaction_date'],
+                    'reference_num': serializer.data['reference_num']
+                }
+                get_customer_query = Customer.objects.get(customer_name = serializer.validated_data['customer'])
+                pdf = render_to_pdf('invoice.html', context)
+                if pdf:
+                    response = HttpResponse(pdf, content_type='application/pdf')
+                    fileName = "Transaction_invoice%s.pdf_for_" %(serializer.validated_data['customer'])
+                    content = "inline; fileName='%s'" %(fileName)
+                    response['Content-Disposition'] = content
+                    mail.send(
+                        get_customer_query.email,
+                        'akisanyamobolaji@gmail.com',
+                        subject=f"Receipt from {serializer.validated_data['business']}",
+                        html_message=f"Dear {serializer.validated_data['customer']}, <p>You just purchased some goods from {serializer.validated_data['business']}, the file attached below is your Invoice</p>",
+                        priority='now',
+                        # headers={'Reply-to': serializer.validated_data['business']},
+                        # attachments={
+                        #     f"{fileName}.pdf" : ContentFile('File content')
+                        # }
+                    )
+                    return response  
+
+                # return Response({'data':serializer.data, 'deducted_data':deduct_quantity_from_product_sold, 'invoice':pdf,'status':status.HTTP_201_CREATED})
         else:
             return Response(data=serializer.errors, status=status.HTTP_404_NOT_FOUND)
     
