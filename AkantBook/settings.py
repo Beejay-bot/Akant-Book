@@ -16,6 +16,7 @@ from decouple import config
 from datetime import timedelta
 from rest_framework.settings import api_settings
 import environ 
+import datetime 
 
 
 env = environ.Env()
@@ -178,3 +179,10 @@ EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'akisanyamobolaji@gmail.com'
 EMAIL_HOST_PASSWORD = 'lkdtqlsylynptjet'
 EMAIL_USE_TLS = True
+
+POST_OFFICE = {
+    'DEFAULT_PRIORITY': 'now',
+    'MESSAGE_ID_ENABLED': True,
+    'MAX_RETRIES': 4,
+    'RETRY_INTERVAL': datetime.timedelta(minutes=15),  # Schedule to be retried 15 minutes later
+}
