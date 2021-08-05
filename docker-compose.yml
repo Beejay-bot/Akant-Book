@@ -9,5 +9,17 @@ services:
         image: app:django
         container_name: akantbook_container
         command: sh -c "python manage.py runserver 0.0.0.0:8000"
+        depends_on: 
+            - db
         environment: 
             - DEBUG=1
+    db:
+        image: postgres
+        volumes: 
+            - ./data/db:/var/lib/postgresql/data
+        environment: 
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=2406
+        container_name: postgres_db
+        
