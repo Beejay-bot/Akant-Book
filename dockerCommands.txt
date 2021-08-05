@@ -1,0 +1,5 @@
+{% comment %} To bulid the docker image {% endcomment %}
+
+
+{% comment %} To start the localhost server {% endcomment %}
+docker run --publish 8000:8000 python-django
