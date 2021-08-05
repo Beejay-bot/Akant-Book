@@ -95,7 +95,8 @@ DATABASES = {
         'NAME': 'AkantBook',
         'USER':'postgres',
         'PASSWORD':'2406',
-        'HOST':'localhost'
+        # 'HOST':'localhost',
+        # 'PORT':'5432'
     }
 }
 

@@ -1,7 +1,12 @@
+from users.views import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+
 # Create your models here.
 
 class CustomAccountManager(BaseUserManager):
@@ -41,3 +46,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.username
+
+    @receiver(post_save, sender=get_user_model())
+    def user_post_save(sender,request, instance, *args, **kwargs):
+        print('User was saved.', instance.id)

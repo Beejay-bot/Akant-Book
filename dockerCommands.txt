@@ -3,3 +3,18 @@
 
 {% comment %} To start the localhost server {% endcomment %}
 docker run --publish 8000:8000 python-django
+
+
+{% comment %} For django-compose {% endcomment %}
+{% comment %} To build a new docker image {% endcomment %}
+django-compose build
+
+{% comment %} To run a particular django command {% endcomment %}
+django-compose run --rm app (then the command) 
+{% comment %} E.G {% endcomment %}
+django-compose run --rm Akantbook py manage.py makemigrations
+django-compose run --rm Akantbook django-admin startapp core
+
+
+{% comment %} TO start a docker container {% endcomment %}
+docker-compose up.
